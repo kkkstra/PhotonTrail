@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+class ModelData: ObservableObject {
+    @Published var user: User?
+    
+    init() {
+        
+    }
+}

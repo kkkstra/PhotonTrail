@@ -30,11 +30,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		CDC49D842CE45FF300F21D23 /* PhotonTrail */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = PhotonTrail;
-			sourceTree = "<group>";
-		};
 		CDC49D952CE45FF500F21D23 /* PhotonTrailTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = PhotonTrailTests;
@@ -43,6 +38,11 @@
 		CDC49D9F2CE45FF500F21D23 /* PhotonTrailUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = PhotonTrailUITests;
+			sourceTree = "<group>";
+		};
+		CDC49DBF2CE4624200F21D23 /* PhotonTrail */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = PhotonTrail;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,7 +75,7 @@
 		CDC49D792CE45FF300F21D23 = {
 			isa = PBXGroup;
 			children = (
-				CDC49D842CE45FF300F21D23 /* PhotonTrail */,
+				CDC49DBF2CE4624200F21D23 /* PhotonTrail */,
 				CDC49D952CE45FF500F21D23 /* PhotonTrailTests */,
 				CDC49D9F2CE45FF500F21D23 /* PhotonTrailUITests */,
 				CDC49D832CE45FF300F21D23 /* Products */,
@@ -108,7 +108,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				CDC49D842CE45FF300F21D23 /* PhotonTrail */,
+				CDC49DBF2CE4624200F21D23 /* PhotonTrail */,
 			);
 			name = PhotonTrail;
 			packageProductDependencies = (

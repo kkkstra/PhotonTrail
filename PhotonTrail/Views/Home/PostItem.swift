@@ -8,11 +8,13 @@
 import SwiftUI
 
 struct PostItem: View {
+    var post: Post
+    
     var body: some View {
         Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
 }
 
 #Preview {
-    PostItem()
+    PostItem(post: Post(id:1))
 }

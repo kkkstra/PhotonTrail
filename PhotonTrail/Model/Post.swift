@@ -6,3 +6,7 @@
 //
 
 import Foundation
+
+struct Post: Codable, Hashable, Identifiable {
+    var id: UInt64
+}
