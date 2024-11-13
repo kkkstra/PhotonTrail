@@ -34,18 +34,24 @@ struct ContentView: View {
                     .tag(Tab.add)
                 HomeView(postViewModel: postViewModel)
                     .tag(Tab.notification)
-                HomeView(postViewModel: postViewModel)
+                MineView()
                     .tag(Tab.mine)
             })
             
             VStack{
+                if modelData.user == nil && selection != .home {
+                    LoginView()
+                        .onDisappear{
+                            if modelData.user != nil {
+                                // logic after login
+                            }
+                        }
+                }
+                
                 Spacer()
                 CustomizeTabView(active: $selection, showAddNote: $showAddNote)
                     .background(.clear)
                     .contentShape(.rect)
-                    .onTapGesture {
-                        print("tap tab view")
-                    }
             }
         }
     }
@@ -110,7 +116,7 @@ struct CustomizeTabView: View {
                             .padding(10)
                             .foregroundStyle(.white)
                             .bold()
-                            .background(.tabButton)
+                            .background(.button)
                             .clipShape(RoundedRectangle(cornerRadius: 16))
                             .shadow(color: .tabShadow, radius: 8, x: 0, y: 4)
                         

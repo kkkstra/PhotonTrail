@@ -15,6 +15,8 @@ struct Post: Codable, Hashable, Identifiable {
     var images: [Image]
     var title: String
     var content: String
+    var camera: String
+    var lens: String
     
     struct Image: Codable, Hashable{
         let imageUrl: String
@@ -33,6 +35,8 @@ struct Post: Codable, Hashable, Identifiable {
         ]
         self.title = "TEST"
         self.content = "just a test"
+        self.camera = "Nikon Z6 III"
+        self.lens = "NIKKOR Z 50mm f/1.4"
     }
     
     func getPublishedTime()->String{
