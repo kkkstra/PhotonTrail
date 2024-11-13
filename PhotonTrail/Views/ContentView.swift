@@ -40,7 +40,7 @@ struct ContentView: View {
             
             VStack{
                 Spacer()
-                MyTabView(active: $selection, showAddNote: $showAddNote)
+                CustomizeTabView(active: $selection, showAddNote: $showAddNote)
                     .background(.clear)
                     .contentShape(.rect)
                     .onTapGesture {
@@ -51,7 +51,7 @@ struct ContentView: View {
     }
 }
 
-struct MyTabView: View {
+struct CustomizeTabView: View {
     @EnvironmentObject var modelData: ModelData
     
     @Binding var active: Tab
@@ -94,7 +94,6 @@ struct MyTabView: View {
                 .contentShape(.rect)
                 .overlay{
                     Button(action: {
-                        print("add Note")
 //                        if(modelData.user == nil){
 //                            withAnimation{
 //                                active = .note

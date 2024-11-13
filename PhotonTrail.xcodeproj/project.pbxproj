@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		CDC49DDB2CE49B7100F21D23 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = CDC49DDA2CE49B7100F21D23 /* Alamofire */; };
+		CDC49DDE2CE49C4B00F21D23 /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = CDC49DDD2CE49C4B00F21D23 /* Nuke */; };
+		CDC49DE02CE49CDD00F21D23 /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = CDC49DDF2CE49CDD00F21D23 /* NukeUI */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		CDC49D932CE45FF500F21D23 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +58,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CDC49DE02CE49CDD00F21D23 /* NukeUI in Frameworks */,
+				CDC49DDB2CE49B7100F21D23 /* Alamofire in Frameworks */,
+				CDC49DDE2CE49C4B00F21D23 /* Nuke in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +121,9 @@
 			);
 			name = PhotonTrail;
 			packageProductDependencies = (
+				CDC49DDA2CE49B7100F21D23 /* Alamofire */,
+				CDC49DDD2CE49C4B00F21D23 /* Nuke */,
+				CDC49DDF2CE49CDD00F21D23 /* NukeUI */,
 			);
 			productName = PhotonTrail;
 			productReference = CDC49D822CE45FF300F21D23 /* PhotonTrail.app */;
@@ -195,6 +207,10 @@
 			);
 			mainGroup = CDC49D792CE45FF300F21D23;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				CDC49DD92CE49B7100F21D23 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				CDC49DDC2CE49C4B00F21D23 /* XCRemoteSwiftPackageReference "Nuke" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = CDC49D832CE45FF300F21D23 /* Products */;
 			projectDirPath = "";
@@ -399,11 +415,14 @@
 				DEVELOPMENT_TEAM = 4PGA36LY7M;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "光迹";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.photography";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -428,11 +447,14 @@
 				DEVELOPMENT_TEAM = 4PGA36LY7M;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "光迹";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.photography";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -558,6 +580,43 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CDC49DD92CE49B7100F21D23 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.1;
+			};
+		};
+		CDC49DDC2CE49C4B00F21D23 /* XCRemoteSwiftPackageReference "Nuke" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/Nuke";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.8.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CDC49DDA2CE49B7100F21D23 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CDC49DD92CE49B7100F21D23 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		CDC49DDD2CE49C4B00F21D23 /* Nuke */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CDC49DDC2CE49C4B00F21D23 /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = Nuke;
+		};
+		CDC49DDF2CE49CDD00F21D23 /* NukeUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CDC49DDC2CE49C4B00F21D23 /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = NukeUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = CDC49D7A2CE45FF300F21D23 /* Project object */;
 }
