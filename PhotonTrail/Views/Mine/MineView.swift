@@ -39,7 +39,6 @@ struct MineView: View {
                 .padding(.top, -100)
                 
                 VStack(alignment: .leading, spacing: 8) {
-                    
                     VStack (alignment: .center) {
                         LazyImage(url: URL(string: modelData.user?.avatar ?? "")) { state in
                             if let image = state.image {
@@ -60,17 +59,23 @@ struct MineView: View {
                         }
                         .frame(width: 100, height: 100)
                         
-                        Text(modelData.user?.name ?? "用户名")
+                        Text(modelData.user?.name ?? "")
                             .font(.title3)
                             .fontWeight(.bold)
+                            .lineLimit(1)
+                            .frame(maxWidth: 200)
                     }
                     
-                    Text(modelData.user?.description ?? "个人简介")
-                        .lineLimit(2)
-                        .foregroundColor(.gray)
                 }
-                .padding(.horizontal, 64)
                 .padding(.top, -60)
+                
+                Text("个人简介：" + (modelData.user?.description ?? ""))
+                    .font(.callout)
+                    .frame(maxWidth: 350, alignment: .leading)
+//                    .lineLimit(3)
+                    .foregroundColor(.gray)
+                    .multilineTextAlignment(.leading)
+                    .padding(.top, 1)
                 
                 Picker("select views", selection: $selectedTab) {
                     ForEach(ProfileTab.allCases, id: \.self) { tab in
@@ -85,7 +90,7 @@ struct MineView: View {
                     PhotosView()
                         .padding(.horizontal, 48)
                 } else if selectedTab == .albums {
-                    Text("这里显示帖子的内容")
+                    Text("这里显示影集的内容")
                         .padding(.horizontal, 48)
                 }
                 

@@ -25,19 +25,52 @@ class LoginViewModel: ObservableObject {
     }
     
     func login(mail: String, password: String) {
-        let res = LoginResult(
-            code: 0,
-            user: User(
-                id: 1,
-                name: "Patrick Lai",
-                email: "yuxin.lai@hust.edu.cn",
-                avatar: "https://kkkstra.cn/assets/img/logo4.jpg",
-                description: "Hello, world!",
-                background: "https://icemono.oss-cn-hangzhou.aliyuncs.com/images/denis-istomin-kaspa2.jpg")
-        )
-        self.modelData?.saveLoginData(res: res)
+        self.loginLoading = true
+        self.errorMsg = ""
+        let parameters: [String: Any] = [
+            "email": mail,
+            "password": password
+        ]
+        
+        AF.request(Urls.LOGIN, method: .post, parameters: parameters, encoding: JSONEncoding.default)
+            .validate(statusCode: 200..<300)
+            .responseDecodable(of: LoginResult.self) { response in
+                self.loginLoading = false
+                switch response.result {
+                case .success(let res):
+                    if (res.data != nil) {
+                        GlobalParams.token = res.data?.token ?? ""
+                        GlobalParams.tokenExpire = res.data?.expire ?? 0
+                        
+                        self.modelData?.saveLoginData(res: res)
+                    }
+                    self.errorMsg = res.msg
+                case .failure(let error):
+                    self.error = error
+                    self.errorMsg = error.errorDescription ?? "登录遇到了一点小问题，请重试。"
+                }
+            }
     }
     
     func register(mail: String, password: String) {
+        self.registerLoading = true
+        self.errorMsg = ""
+        let parameters: [String: Any] = [
+            "email": mail,
+            "password": password
+        ]
+        
+        AF.request(Urls.REGISTER, method: .post, parameters: parameters, encoding: JSONEncoding.default)
+            .validate(statusCode: 200..<300)
+            .responseDecodable(of: RegisterResult.self) { response in
+                self.registerLoading = false
+                switch response.result {
+                case .success(let res):
+                    self.errorMsg = res.msg
+                case .failure(let error):
+                    self.error = error
+                    self.errorMsg = error.errorDescription ?? "登录遇到了一点小问题，请重试。"
+                }
+            }
     }
 }

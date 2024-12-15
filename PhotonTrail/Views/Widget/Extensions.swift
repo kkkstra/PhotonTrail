@@ -31,3 +31,19 @@ extension View {
         }
     }
 }
+
+extension UIImage {
+    func aspectFittedToHeight(_ newHeight: CGFloat) -> UIImage {
+        let scale = newHeight / self.size.height
+        let newWidth = self.size.width * scale
+        let newSize = CGSize(width: newWidth, height: newHeight)
+        // Use the correct scale factor for the current screen
+        let rendererFormat = UIGraphicsImageRendererFormat.default() // 3:1
+        rendererFormat.scale = self.scale
+        let renderer = UIGraphicsImageRenderer(size: newSize, format: rendererFormat)
+        
+        return renderer.image { _ in
+            self.draw(in: CGRect(origin: .zero, size: newSize))
+        }
+    }
+}

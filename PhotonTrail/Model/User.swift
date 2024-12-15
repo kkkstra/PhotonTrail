@@ -11,6 +11,7 @@ struct User: Identifiable, Codable {
     let id: Int
     let name: String
     let email: String
+    let role: Int
     var avatar: String?
     var description: String?
     var background: String?

@@ -28,11 +28,11 @@ struct ContentView: View {
             TabView(selection: $selection, content: {
                 HomeView(postViewModel: postViewModel)
                     .tag(Tab.home)
-                HomeView(postViewModel: postViewModel)
+                CommunityView()
                     .tag(Tab.community)
                 EmptyView()
                     .tag(Tab.add)
-                HomeView(postViewModel: postViewModel)
+                NotifyView()
                     .tag(Tab.notification)
                 MineView()
                     .tag(Tab.mine)

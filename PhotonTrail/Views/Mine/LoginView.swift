@@ -47,7 +47,7 @@ struct LoginView: View {
                 Spacer().frame(height: 16)
                 
                 HStack(spacing: 8){
-                    TextField("密码", text: $password)
+                    SecureField("密码", text: $password)
                         .keyboardType(.asciiCapable)
                 }
                 .padding(12)

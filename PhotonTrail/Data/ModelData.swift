@@ -11,15 +11,42 @@ class ModelData: ObservableObject {
     @Published var user: User?
     
     init() {
-        self.user = User(
-            id: 1,
-            name: "Patrick Lai",
-            email: "yuxin.lai@hust.edu.cn",
-            avatar: "https://kkkstra.cn/assets/img/logo4.jpg",
-            description: "当你什么都不在乎了，你的人生才真正的开始。无能为力 ，叫顺其自然。心无所谓 ，才叫随遇而安。在别人眼里你很温柔，其实 ，哪有什么天生，温柔只是学会了控制情绪而已。")
+        if let loginData = UserDefaults.standard.data(forKey: DataKeys.LOGIN_RESULT) {
+            if let loginResult = try? JSONDecoder().decode(LoginResult.self, from: loginData) {
+                // 校验token是否过期
+                let expires = loginResult.data?.expire ?? 0
+                let timestampAfter6h = Int(Date().timeIntervalSince1970) +  6 * 60 * 60
+                if(timestampAfter6h < expires){
+                    self.user = loginResult.data?.profile
+                    GlobalParams.token = loginResult.data?.token ?? ""
+                    GlobalParams.tokenExpire = loginResult.data?.expire ?? 0
+                }
+            }
+        }
     }
     
     func saveLoginData(res: LoginResult){
-        self.user = res.user
+        self.user = res.data?.profile
+        if let encoded = try? JSONEncoder().encode(res) {
+            UserDefaults.standard.set(encoded, forKey: DataKeys.LOGIN_RESULT)
+        }
+        if let encoded = try? JSONEncoder().encode(res.data?.profile.email) {
+            UserDefaults.standard.set(encoded, forKey: DataKeys.LAST_LOGIN_EMAIL)
+        }
+    }
+    
+    func updateUserData(res: UpdateProfileResult) {
+        self.user = res.data?.profile
+        if let loginData = UserDefaults.standard.data(forKey: DataKeys.LOGIN_RESULT) {
+            if var loginResult = try? JSONDecoder().decode(LoginResult.self, from: loginData) {
+                if let profile = res.data?.profile {
+                    loginResult.data?.profile = profile
+                    
+                    if let updatedData = try? JSONEncoder().encode(loginResult) {
+                        UserDefaults.standard.set(updatedData, forKey: DataKeys.LOGIN_RESULT)
+                    }
+                }
+            }
+        }
     }
 }
