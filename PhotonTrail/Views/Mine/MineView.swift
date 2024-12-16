@@ -18,46 +18,82 @@ struct MineView: View {
     
     @State private var selectedTab: ProfileTab = .photos
     @State private var showProfile = false
+    @State private var isActionSheetPresented = false
+    @State private var showImageFullScreen = false
+    @State private var imageUrl: String = ""
     
     var body: some View {
         NavigationStack{
             ScrollView{
-                LazyImage(url: URL(string: modelData.user?.background ?? "")) { state in
-                    if let image = state.image {
-                        image
-                            .resizable()
-                            .scaledToFill()
-                            .frame(height: 400)
-                    } else {
-                        Image("defaultBg")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(height: 400)
+                ZStack {
+                    LazyImage(url: URL(string: modelData.user?.background ?? "")) { state in
+                        if let image = state.image {
+                            image
+                                .resizable()
+                                .scaledToFill()
+                                .frame(height: 400)
+                        } else {
+                            Image("defaultBg")
+                                .resizable()
+                                .scaledToFill()
+                                .frame(height: 400)
+                        }
+                    }
+                    .frame(height: 400)
+                    .padding(.top, -100)
+
+                    Button(action: {
+                        isActionSheetPresented.toggle()
+                    }) {
+                        Color.clear
+                    }
+                    .frame(height: 200)
+                    .actionSheet(isPresented: $isActionSheetPresented) {
+                        ActionSheet(
+                            title: Text("操作"),
+                            buttons: [
+                                .default(Text("查看大图")) {
+                                    imageUrl = modelData.user?.background ?? ""
+                                    showImageFullScreen.toggle()
+                                },
+                                .default(Text("更换背景")) {
+//                                    changeBackground()
+                                },
+                                .cancel(Text("取消"))
+                            ]
+                        )
                     }
                 }
-                .frame(height: 400)
-                .padding(.top, -100)
                 
                 VStack(alignment: .leading, spacing: 8) {
                     VStack (alignment: .center) {
-                        LazyImage(url: URL(string: modelData.user?.avatar ?? "")) { state in
-                            if let image = state.image {
-                                image
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 100, height: 100)
-                                    .clipShape(Circle())
-                                    .overlay(Circle().stroke(Color.white, lineWidth: 3))
-                            } else {
-                                Image("defaultAvatar")
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 100, height: 100)
-                                    .clipShape(Circle())
-                                    .overlay(Circle().stroke(Color.white, lineWidth: 3))
+                        ZStack {
+                            LazyImage(url: URL(string: modelData.user?.avatar ?? "")) { state in
+                                if let image = state.image {
+                                    image
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 100, height: 100)
+                                        .clipShape(Circle())
+                                        .overlay(Circle().stroke(Color.white, lineWidth: 3))
+                                } else {
+                                    Image("defaultAvatar")
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 100, height: 100)
+                                        .clipShape(Circle())
+                                        .overlay(Circle().stroke(Color.white, lineWidth: 3))
+                                }
+                            }
+                            .frame(width: 100, height: 100)
+                            
+                            Button(action: {
+                                imageUrl = modelData.user?.avatar ?? ""
+                                showImageFullScreen.toggle()
+                            }) {
+                                Color.clear
                             }
                         }
-                        .frame(width: 100, height: 100)
                         
                         Text(modelData.user?.name ?? "")
                             .font(.title3)
@@ -108,6 +144,9 @@ struct MineView: View {
             .toolbarBackground(.hidden, for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
             .sheet(isPresented: $showProfile, content: { ProfileView(showProfile:$showProfile) })
+            .sheet(isPresented: $showImageFullScreen) {
+                FullScreenImageView(imageURL: $imageUrl, defaultImage: "defaultBg")
+            }
         }
     }
 }
