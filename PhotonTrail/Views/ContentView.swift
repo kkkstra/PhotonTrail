@@ -52,7 +52,7 @@ struct ContentView: View {
                 LoginView()
                     .onDisappear{
                         if modelData.user != nil {
-                            // logic after login
+                            postViewModel.fetchFirst()
                         }
                     }
             }

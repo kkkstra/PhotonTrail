@@ -66,7 +66,7 @@ struct PostItem: View {
                     } label: {
                         Image(systemName: "ellipsis.circle")
                             .font(.system(size: 20))
-                            .foregroundColor(.black)
+                            .foregroundColor(.button3)
                     }
                 }
             }
