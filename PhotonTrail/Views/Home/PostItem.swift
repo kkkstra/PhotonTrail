@@ -26,7 +26,7 @@ struct PostItem: View {
                 NavigationLink(destination: UserView(userViewModel: userViewModel), isActive: $navigateToUserView) {
                     LazyImage(url: URL(string: post.avatar)) { state in
                         if let image = state.image {
-                            state.image?.resizable()
+                            image.resizable()
                                 .scaledToFill()
                         } else {
                             Image("defaultAvatar")
