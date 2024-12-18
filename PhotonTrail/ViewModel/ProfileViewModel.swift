@@ -21,31 +21,51 @@ class ProfileViewModel: ObservableObject {
         }
     }
     
-    func updateProfile(name: String, description: String, image: UIImage?) {
+    func updateProfile(name: String, description: String, avatar: UIImage?, bg: UIImage?) {
         self.msg = ""
         self.success = false
 
         // update avatar if exist
-        if let image = image {
-            getStsTokenThenUploadImages(image: image) { imageUrl in
-                if let url = imageUrl {
-                    self.uploadProfile(name: name, description: description, avatar: url)
+        if let image = avatar {
+            getStsTokenThenUploadImage(image: image) { imageUrl in
+                if let avatarUrl = imageUrl {
+                    if let image = bg {
+                        self.getStsTokenThenUploadImage(image: image) { imageUrl in
+                            if let bgUrl = imageUrl {
+                                self.uploadProfile(name: name, description: description, avatar: avatarUrl, bg: bgUrl)
+                            } else {
+                                self.msg = "上传背景时遇到了一点小问题，请重试。"
+                            }
+                        }
+                    } else {
+                        self.uploadProfile(name: name, description: description, avatar: avatarUrl, bg: self.modelData?.user?.background ?? "")
+                    }
                 } else {
                     self.msg = "上传头像时遇到了一点小问题，请重试。"
                 }
             }
         } else {
-            uploadProfile(name: name, description: description, avatar: modelData?.user?.avatar ?? "")
+            if let image = bg {
+                self.getStsTokenThenUploadImage(image: image) { imageUrl in
+                    if let bgUrl = imageUrl {
+                        self.uploadProfile(name: name, description: description, avatar: self.modelData?.user?.avatar ?? "", bg: bgUrl)
+                    } else {
+                        self.msg = "上传背景时遇到了一点小问题，请重试。"
+                    }
+                }
+            } else {
+                self.uploadProfile(name: name, description: description, avatar: self.modelData?.user?.avatar ?? "", bg: self.modelData?.user?.background ?? "")
+            }
         }
     }
     
-    private func uploadProfile(name: String, description: String, avatar: String) {
+    private func uploadProfile(name: String, description: String, avatar: String, bg: String) {
         // update profile
         let parameters: [String: Any] = [
             "name": name,
             "description": description,
             "avatar": avatar,
-            "background": modelData?.user?.background ?? ""
+            "background": bg
         ]
         let headers: HTTPHeaders = [
             "Authorization": "Bearer " + GlobalParams.token
@@ -67,7 +87,7 @@ class ProfileViewModel: ObservableObject {
             }
     }
     
-    private func uploadImages(tokenData: StsModel, image: UIImage, completion: @escaping (String?) -> Void){
+    private func uploadImage(tokenData: StsModel, image: UIImage, completion: @escaping (String?) -> Void){
         let dispatchGroup = DispatchGroup()
         var imageUrl: String?
 
@@ -112,7 +132,7 @@ class ProfileViewModel: ObservableObject {
         }
     }
     
-    private func getStsTokenThenUploadImages(image: UIImage, completion: @escaping (String?) -> Void) {
+    private func getStsTokenThenUploadImage(image: UIImage, completion: @escaping (String?) -> Void) {
         let headers: HTTPHeaders = [
             "Authorization": "Bearer " + GlobalParams.token
         ]
@@ -122,7 +142,7 @@ class ProfileViewModel: ObservableObject {
                 switch response.result {
                 case .success(let res):
                     if let sts = res.data?.sts {
-                        self.uploadImages(tokenData: sts, image: image) { imageUrl in
+                        self.uploadImage(tokenData: sts, image: image) { imageUrl in
                             completion(imageUrl) // 回调返回上传后的 URL
                         }
                     } else {

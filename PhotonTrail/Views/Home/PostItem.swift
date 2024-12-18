@@ -10,16 +10,41 @@ import NukeUI
 
 struct PostItem: View {
     var post: Post
+    @State private var showFullImageScreen = false
+    @State private var selectedImageURL: String = ""
+    @State private var selectedPost: Post?
+    @State private var navigateToUserView = false
+
+    @StateObject var userViewModel = UserViewModel()
+    @ObservedObject var userPostsViewModel: UserPostsViewModel
+    var enableUserTap: Bool
+    var enableEdit: Bool
     
     var body: some View {
         VStack(alignment: .leading) {
             HStack{
-                LazyImage(url: URL(string: post.avatar)) { image in
-                    image.image?.resizable()
-                        .scaledToFill()
+                NavigationLink(destination: UserView(userViewModel: userViewModel), isActive: $navigateToUserView) {
+                    LazyImage(url: URL(string: post.avatar)) { state in
+                        if let image = state.image {
+                            state.image?.resizable()
+                                .scaledToFill()
+                        } else {
+                            Image("defaultAvatar")
+                                .resizable()
+                                .scaledToFill()
+                        }
+                    }
+                    .frame(width: 48, height: 48)
+                    .clipShape(Circle())
+                    .onTapGesture {
+                        if enableUserTap {
+                            userViewModel.fetchData(userID: post.user_id) {
+                                navigateToUserView = true
+                            }
+                        }
+                    }
                 }
-                .frame(width: 48, height: 48)
-                .clipShape(/*@START_MENU_TOKEN@*/Circle()/*@END_MENU_TOKEN@*/)
+                
                 Text(post.name)
                     .font(.headline)
                     .fontWeight(.medium)
@@ -28,22 +53,45 @@ struct PostItem: View {
                 
                 Text(post.getPublishedTime())
                     .font(.subheadline)
-                //                Image(systemName: "ellipsis")
+                
+                if enableEdit {
+                    Menu {
+                        Button(action: {
+                            userViewModel.deletePost(postID: post.id) {
+                                userPostsViewModel.fetchData(userID: userViewModel.user?.id ?? 0)
+                            }
+                        }) {
+                            Label("删除", systemImage: "trash")
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
+                            .font(.system(size: 20))
+                            .foregroundColor(.black)
+                    }
+                }
             }
             .padding(.trailing)
             .padding(.leading)
             .padding(.top)
         }
-        
-        PhotoPageView(pages: post.images.map({
-            LazyImage(url: URL(string: $0.imageUrl)){phase in
+
+        PhotoPageView(pages: post.images.map { image in
+            LazyImage(url: URL(string: image.url)) { phase in
                 phase.image?.resizable()
                     .scaledToFit()
                     .transition(.opacity.animation(.smooth))
+                    .onTapGesture {
+                        selectedImageURL = image.url
+                        selectedPost = post
+                        showFullImageScreen.toggle()
+                    }
             }
-        }))
+        })
         .frame(maxWidth: .infinity)
-        .aspectRatio(CGFloat(post.images[0].width) / CGFloat( post.images[0].height + 1), contentMode: .fill)
+        .aspectRatio(max(CGFloat(post.images[0].width) / CGFloat(post.images[0].height + 1), 1), contentMode: .fill)
+        .fullScreenCover(isPresented: $showFullImageScreen) {
+            FullScreenImageDetailedView(imageURL: $selectedImageURL, post: $selectedPost)
+        }
         
         VStack(alignment: .leading){
             if(!post.title.isEmpty){
@@ -63,8 +111,4 @@ struct PostItem: View {
         .padding(.trailing)
         .padding(.bottom)
     }
-}
-
-#Preview {
-    PostItem(post: Post(id:1))
 }

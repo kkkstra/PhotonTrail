@@ -9,31 +9,38 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject var modelData: ModelData
-    
     @ObservedObject var postViewModel: PostViewModel
-    
-    @State private var loading = false
-    
+        
     var body: some View {
         NavigationStack {
             ScrollView {
-                LazyVStack{
+                LazyVStack {
                     ForEach(postViewModel.postList, id: \.id, content: { post in
-                        PostItem(post: post)
+                        PostItem(post: post, userPostsViewModel: UserPostsViewModel(), enableUserTap: true, enableEdit: false)
                             .onAppear(perform: {
                                 if(post == postViewModel.postList.last) {
-                                    loading = true
-//                                    postViewModel.fetchMore()
+                                     postViewModel.fetchMore()
                                 }
                             })
                             .zIndex(15)
                     })
                 }
-                if(loading) {
+                if postViewModel.curPostCount == 0 {
+                    Text("没有更多了")
+                } else {
                     ProgressView()
                         .padding(.bottom)
                 }
             }
+            .onAppear {
+                if(postViewModel.postList.isEmpty) {
+                    postViewModel.fetchFirst()
+                }
+            }
+            .refreshable {
+                postViewModel.fetchFirst()
+            }
+            .navigationTitle("光迹")
         }
     }
 }

@@ -14,7 +14,7 @@ struct LoginResult: Codable {
     var msg: String
     
     struct Data: Codable {
-        var id: Int
+        var id: UInt64
         var role: Int
         var token: String
         var expire: Int
@@ -29,7 +29,7 @@ struct RegisterResult: Codable {
     var msg: String
     
     struct Data: Codable {
-        var id: Int
+        var id: UInt64
     }
 }
 
@@ -64,4 +64,33 @@ struct StsModel: Codable {
     var x_oss_credential: String
     var x_oss_date: String
     var x_oss_signature_version: String
+}
+
+struct GetPostsResult: Codable {
+    var code: Int
+    var data: Data?
+    var error: String?
+    var msg: String
+    
+    struct Data: Codable {
+        var posts: [Post]
+        var total: Int
+    }
+}
+
+struct CreatePostResult: Codable {
+    var code: Int
+    var data: Data?
+    var error: String?
+    var msg: String
+    
+    struct Data: Codable {
+        var post_id: UInt64
+    }
+}
+
+struct DeletePostResult: Codable {
+    var code: Int
+    var error: String?
+    var msg: String
 }

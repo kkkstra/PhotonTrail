@@ -9,14 +9,8 @@ import SwiftUI
 import NukeUI
 import PhotosUI
 
-enum ProfileTab: String, CaseIterable {
-    case photos = "照片"
-    case posts = "帖子"
-}
-
-struct MineView: View {
-    @EnvironmentObject var modelData: ModelData
-    
+struct UserView: View {
+    @ObservedObject var userViewModel: UserViewModel
     @StateObject var userPostsViewModel = UserPostsViewModel()
     
     @State private var selectedTab: ProfileTab = .photos
@@ -31,7 +25,7 @@ struct MineView: View {
             ScrollView {
                 ZStack {
                     GeometryReader { geometry in
-                        LazyImage(url: URL(string: modelData.user?.background ?? "")) { state in
+                        LazyImage(url: URL(string: userViewModel.user?.background ?? "")) { state in
                             if let image = state.image {
                                 image
                                     .resizable()
@@ -49,7 +43,7 @@ struct MineView: View {
                     .padding(.top, -100)
                     
                     Button(action: {
-                        imageUrl = modelData.user?.background ?? ""
+                        imageUrl = userViewModel.user?.background ?? ""
                         defaultImage = "defaultBg"
                         showImageFullScreen.toggle()
                     }) {
@@ -61,7 +55,7 @@ struct MineView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     VStack (alignment: .center) {
                         ZStack {
-                            LazyImage(url: URL(string: modelData.user?.avatar ?? "")) { state in
+                            LazyImage(url: URL(string: userViewModel.user?.avatar ?? "")) { state in
                                 if let image = state.image {
                                     image
                                         .resizable()
@@ -81,7 +75,7 @@ struct MineView: View {
                             .frame(width: 100, height: 100)
                             
                             Button(action: {
-                                imageUrl = modelData.user?.avatar ?? ""
+                                imageUrl = userViewModel.user?.avatar ?? ""
                                 defaultImage = "defaultAvatar"
                                 showImageFullScreen.toggle()
                             }) {
@@ -90,7 +84,7 @@ struct MineView: View {
                             .frame(width: 100, height: 100)
                         }
                         
-                        Text(modelData.user?.name ?? "")
+                        Text(userViewModel.user?.name ?? "")
                             .font(.title3)
                             .fontWeight(.bold)
                             .lineLimit(1)
@@ -100,7 +94,7 @@ struct MineView: View {
                 }
                 .padding(.top, -60)
                 
-                Text("个人简介：" + (modelData.user?.description ?? ""))
+                Text("个人简介：" + (userViewModel.user?.description ?? ""))
                     .font(.callout)
                     .frame(maxWidth: 350, alignment: .leading)
                 //                    .lineLimit(3)
@@ -121,42 +115,25 @@ struct MineView: View {
                     Text(userPostsViewModel.msg)
                     UserPhotosView(userPostsViewModel: userPostsViewModel)
                         .onAppear(perform: {
-                            userPostsViewModel.fetchData(userID: modelData.user?.id ?? 0)
+                            userPostsViewModel.fetchData(userID: userViewModel.user?.id ?? 0)
                         })
                 } else if selectedTab == .posts {
                     Text(userPostsViewModel.msg)
-                    UserPostsView(userPostsViewModel: userPostsViewModel, enableEdit: true)
+                    UserPostsView(userPostsViewModel: userPostsViewModel, enableEdit: false)
                         .onAppear(perform: {
-                            userPostsViewModel.fetchData(userID: modelData.user?.id ?? 0)
+                            userPostsViewModel.fetchData(userID: userViewModel.user?.id ?? 0)
                         })
                 }
             }
             .ignoresSafeArea(.all)
-            .toolbar{
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button{
-                        showProfile.toggle()
-                    } label: {
-                        Label("Edit Profile", systemImage: "gearshape")
-                    }
-                }
-            }
-            .toolbarBackground(.hidden, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
-            .sheet(isPresented: $showProfile, content: { ProfileView(showProfile:$showProfile) })
+//            .toolbarBackground(.hidden, for: .navigationBar)
+//            .toolbarColorScheme(.dark, for: .navigationBar)
             .fullScreenCover(isPresented: $showImageFullScreen, content: {
                 FullScreenImageView(imageURL: $imageUrl, defaultImage: $defaultImage)
             })
-            .refreshable(action: {
-                userPostsViewModel.fetchData(userID: modelData.user?.id ?? 0)
-            })
         }
+        .navigationTitle(userViewModel.user?.name ?? "")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
-
-#Preview {
-    let modelData = ModelData()
-    MineView()
-        .environmentObject(modelData)
-}

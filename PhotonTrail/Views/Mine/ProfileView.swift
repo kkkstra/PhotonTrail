@@ -15,7 +15,9 @@ struct ProfileView: View {
     @State private var name: String = ""
     @State private var description: String = ""
     @State private var selectedImage: UIImage?
+    @State private var selectedBackgroundImage: UIImage?  // 新增背景图片的状态变量
     @State private var isImagePickerPresented = false
+    @State private var isBackgroundImagePickerPresented = false  // 新增背景图片选择器的状态
     @Binding var showProfile: Bool
     
     @StateObject var profileViewModel = ProfileViewModel()
@@ -24,7 +26,45 @@ struct ProfileView: View {
         NavigationView {
             VStack {
                 Form {
-                    // 头像选择区域
+                    Section {
+                        VStack {
+                            ZStack {
+                                if let selectedBackgroundImage = selectedBackgroundImage {
+                                    Image(uiImage: selectedBackgroundImage)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(height: 200)
+                                        .clipped()
+                                } else {
+                                    LazyImage(url: URL(string: modelData.user?.background ?? "")) { state in
+                                        if let image = state.image {
+                                            image
+                                                .resizable()
+                                                .frame(height: 200)
+                                        } else {
+                                            Color.white
+                                                .frame(height: 200)
+                                                .overlay(
+                                                    Text("点击上传背景图片")
+                                                        .foregroundColor(.gray)
+                                                        .font(.headline)
+                                                        .opacity(0.7)
+                                                )
+                                        }
+                                    }
+                                }
+                                Button(action: {
+                                    isBackgroundImagePickerPresented = true
+                                }) {
+                                    Image(systemName: "camera.fill")
+                                        .foregroundColor(.white)
+                                        .background(Circle().fill(Color.blue).frame(width: 36, height: 36))
+                                        .offset(x: 140, y: 80)
+                                }
+                            }
+                        }
+                    }
+
                     Section {
                         HStack {
                             Spacer()
@@ -68,9 +108,10 @@ struct ProfileView: View {
                             }
                             Spacer()
                         }
+
                         HStack {
                             Text("昵称")
-                                .frame(width: 80, alignment: .leading) // 固定标签宽度
+                                .frame(width: 80, alignment: .leading)
                             TextField("", text: $name)
                         }
                         
@@ -100,6 +141,9 @@ struct ProfileView: View {
                 })
                 .sheet(isPresented: $isImagePickerPresented) {
                     ImagePicker(selectedImage: $selectedImage)
+                }
+                .sheet(isPresented: $isBackgroundImagePickerPresented) {
+                    ImagePicker(selectedImage: $selectedBackgroundImage)
                 }
                 .onAppear {
                     loadUserData()
@@ -132,7 +176,7 @@ struct ProfileView: View {
                     .listRowBackground(Color.clear)
                     .padding(.horizontal, 100)
                 }
-                .padding(.top, 20)
+//                .padding(.top, 20)
             }
             .onAppear(perform: {
                 profileViewModel.initData(modelData: modelData)
@@ -149,7 +193,7 @@ struct ProfileView: View {
     // 保存用户数据的方法
     private func saveProfile() {
         // save profile
-        profileViewModel.updateProfile(name: name, description: description, image: selectedImage)
+        profileViewModel.updateProfile(name: name, description: description, avatar: selectedImage, bg: selectedBackgroundImage)
         loadUserData()
         showProfile.toggle()
     }

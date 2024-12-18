@@ -41,6 +41,7 @@ class LoginViewModel: ObservableObject {
                     if (res.data != nil) {
                         GlobalParams.token = res.data?.token ?? ""
                         GlobalParams.tokenExpire = res.data?.expire ?? 0
+                        GlobalParams.id = res.data?.id ?? 0
                         
                         self.modelData?.saveLoginData(res: res)
                     }
@@ -69,8 +70,9 @@ class LoginViewModel: ObservableObject {
                     self.errorMsg = res.msg
                 case .failure(let error):
                     self.error = error
-                    self.errorMsg = error.errorDescription ?? "登录遇到了一点小问题，请重试。"
+                    self.errorMsg = error.errorDescription ?? "注册遇到了一点小问题，请重试。"
                 }
             }
+        
     }
 }

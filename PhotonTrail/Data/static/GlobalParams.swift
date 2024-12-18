@@ -10,9 +10,11 @@ import Foundation
 class GlobalParams{
     static var token = ""
     static var tokenExpire = 0
+    static var id: UInt64 = 0
     
     static func logout(){
         GlobalParams.token = ""
         GlobalParams.tokenExpire = 0
+        GlobalParams.id = 0
     }
 }

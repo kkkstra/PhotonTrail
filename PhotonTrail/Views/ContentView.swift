@@ -19,41 +19,51 @@ struct ContentView: View {
     @EnvironmentObject var modelData: ModelData
 
     @StateObject private var postViewModel = PostViewModel()
+    @StateObject private var addPostViewModel = AddPostViewModel()
     
     @State private var selection: Tab = .home
-    @State private var showAddNote = false
+    @State private var showAddPost = false
     
     var body: some View {
-        ZStack{
-            TabView(selection: $selection, content: {
+        ZStack{            
+            TabView(selection: $selection, content:  {
                 HomeView(postViewModel: postViewModel)
                     .tag(Tab.home)
-                CommunityView()
-                    .tag(Tab.community)
+//                CommunityView()
+//                    .tag(Tab.community)
                 EmptyView()
                     .tag(Tab.add)
-                NotifyView()
-                    .tag(Tab.notification)
+//                NotifyView()
+//                    .tag(Tab.notification)
                 MineView()
                     .tag(Tab.mine)
             })
             
             VStack{
-                if modelData.user == nil && selection != .home {
-                    LoginView()
-                        .onDisappear{
-                            if modelData.user != nil {
-                                // logic after login
-                            }
-                        }
-                }
-                
                 Spacer()
-                CustomizeTabView(active: $selection, showAddNote: $showAddNote)
+                CustomizeTabView(active: $selection, showAddPost: $showAddPost)
                     .background(.clear)
                     .contentShape(.rect)
+                    .padding(.horizontal, 24)
+            }
+            
+            if modelData.user == nil {
+                Color.gray.ignoresSafeArea()
+                LoginView()
+                    .onDisappear{
+                        if modelData.user != nil {
+                            // logic after login
+                        }
+                    }
             }
         }
+        .sheet(isPresented: $showAddPost, content: {
+            AddPostView(showAddPost:$showAddPost, addPostViewModel: addPostViewModel)
+                .environmentObject(modelData)
+                .onDisappear(perform: {
+                    postViewModel.fetchFirst()
+                })
+        })
     }
 }
 
@@ -61,10 +71,10 @@ struct CustomizeTabView: View {
     @EnvironmentObject var modelData: ModelData
     
     @Binding var active: Tab
-    @Binding var showAddNote: Bool
+    @Binding var showAddPost: Bool
     
     var body: some View {
-        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 0), count: 5), spacing: 0) {
+        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 0), count: 3), spacing: 0) {
             Rectangle()
                 .foregroundStyle(.clear)
                 .contentShape(.rect)
@@ -80,34 +90,33 @@ struct CustomizeTabView: View {
                         active = .home
                     }
                 }
-            Rectangle()
-                .foregroundStyle(.clear)
-                .contentShape(.rect)
-                .overlay{
-                    Text("影集")
-                        .font(active == .community ? .headline : .callout)
-                        .bold()
-                        .foregroundStyle(active == .community ? .primary : .secondary)
-                        .padding(.vertical, 4)
-                }
-                .onTapGesture {
-                    withAnimation{
-                        active = .community
-                    }
-                }
+//            Rectangle()
+//                .foregroundStyle(.clear)
+//                .contentShape(.rect)
+//                .overlay{
+//                    Text("影集")
+//                        .font(active == .community ? .headline : .callout)
+//                        .bold()
+//                        .foregroundStyle(active == .community ? .primary : .secondary)
+//                        .padding(.vertical, 4)
+//                }
+//                .onTapGesture {
+//                    withAnimation{
+//                        active = .community
+//                    }
+//                }
             Rectangle()
                 .foregroundStyle(.clear)
                 .contentShape(.rect)
                 .overlay{
                     Button(action: {
-//                        if(modelData.user == nil){
-//                            withAnimation{
-//                                active = .note
-//                            }
-//                        }else{
-//                            self.showAddNote = true
-//                        }
-                        self.showAddNote = true
+                        if(modelData.user == nil){
+                            withAnimation{
+                                active = .mine
+                            }
+                        }else{
+                            self.showAddPost = true
+                        }
                     }){
                         Image(systemName: "plus")
                             .resizable()
@@ -126,25 +135,25 @@ struct CustomizeTabView: View {
                 .onTapGesture {
                     
                 }
+//            Rectangle()
+//                .foregroundStyle(.clear)
+//                .contentShape(.rect)
+//                .overlay{
+//                    Text("通知")
+//                        .font(active == .notification ? .headline : .callout)
+//                        .bold()
+//                        .foregroundStyle(active == .notification ? .primary : .secondary)
+//                        .padding(.vertical, 4)
+//                }
+//                .onTapGesture {
+//                    withAnimation{
+//                        active = .notification
+//                    }
+//                }
             Rectangle()
                 .foregroundStyle(.clear)
-                .contentShape(.rect)
                 .overlay{
-                    Text("通知")
-                        .font(active == .notification ? .headline : .callout)
-                        .bold()
-                        .foregroundStyle(active == .notification ? .primary : .secondary)
-                        .padding(.vertical, 4)
-                }
-                .onTapGesture {
-                    withAnimation{
-                        active = .notification
-                    }
-                }
-            Rectangle()
-                .foregroundStyle(.clear)
-                .overlay{
-                    Text("我")
+                    Text("我的")
                         .font(active == .mine ? .headline : .callout)
                         .bold()
                         .foregroundStyle(active == .mine ? .primary : .secondary)
