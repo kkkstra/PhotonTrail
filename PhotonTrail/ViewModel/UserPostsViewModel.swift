@@ -19,6 +19,9 @@ class UserPostsViewModel: ObservableObject {
             "Authorization": "Bearer " + GlobalParams.token
         ]
         
+//        let group = DispatchGroup()
+//        group.enter()
+        
         AF.request(url, headers: headers)
             .validate()
             .responseDecodable(of: GetPostsResult.self) { response in
@@ -33,6 +36,11 @@ class UserPostsViewModel: ObservableObject {
 //                    print(error.errorDescription ?? "")
 //                    self.msg = "没有更多数据了"
                 }
+//                group.leave()
             }
+        
+//        group.notify(queue: .main) {
+//            completion()
+//        }
     }
 }

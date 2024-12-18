@@ -24,7 +24,6 @@ class PostViewModel: ObservableObject {
     
     func fetchMore(){
         self.error = nil
-        self.page += 1
         fetchPost()
     }
     
@@ -43,11 +42,13 @@ class PostViewModel: ObservableObject {
                     if let newPosts = posts.data?.posts {
                         self.postList.append(contentsOf: newPosts)
                         self.curPostCount = posts.data?.total ?? 0
+                        if self.curPostCount > 0 {
+                            self.page += 1
+                        }
                     }
                     self.curPostCount = 0
                 case .failure(let error):
                     self.error = error
-                    self.page -= 1
                     self.curPostCount = 0
                     print("Request failed with error: \(error)")
                 }
