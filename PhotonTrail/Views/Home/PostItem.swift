@@ -96,7 +96,7 @@ struct PostItem: View {
         .frame(maxWidth: .infinity)
         .aspectRatio(max(CGFloat(post.images[0].width) / CGFloat(post.images[0].height + 1), 0.75), contentMode: .fill)
         .fullScreenCover(isPresented: $showFullImageScreen) {
-            FullScreenImageDetailedView(imageURL: $selectedImageURL, post: $selectedPost)
+            FullScreenImageDetailedView(post: $selectedPost)
         }
         
         VStack(alignment: .leading){

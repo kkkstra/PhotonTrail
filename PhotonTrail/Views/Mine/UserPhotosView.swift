@@ -59,7 +59,7 @@ struct UserPhotosView: View {
             .frame(height: calculateGridHeight())
         }
         .fullScreenCover(item: $selectedPost) { post in
-            FullScreenImageDetailedView(imageURL: $selectedImage, post: $selectedPost)
+            FullScreenImageDetailedView(post: $selectedPost)
         }
     }
     
