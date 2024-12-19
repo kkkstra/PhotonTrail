@@ -32,29 +32,24 @@ struct UserPhotosView: View {
                 } else {
                     LazyVGrid(columns: columns, spacing: 1) {
                         ForEach(userPostsViewModel.postList, id: \.id) { post in
-                            ForEach(post.images, id: \.self) { image in
-                                ZStack {
-                                    LazyImage(url: URL(string: image.url)) { state in
-                                        if let image = state.image {
-                                            image
-                                                .resizable()
-                                                .scaledToFill()
-                                                .frame(width: length - 1, height: length - 1)
-                                                .clipped()
-                                        } else {
-                                            Color.gray
-                                                .frame(width: length - 1, height: length - 1)
-                                        }
+                            ForEach(post.images, id: \.self) { imageMeta in
+                                LazyImage(url: URL(string: imageMeta.url)) { state in
+                                    if let image = state.image {
+                                        image
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(width: length - 1, height: length - 1)
+                                            .clipped()
+                                    } else {
+                                        Color.gray
+                                            .frame(width: length - 1, height: length - 1)
                                     }
-                                    .frame(width: length, height: length)
-                                    
-                                    Button(action: {
-                                        selectedPost = post
-                                        selectedImage = image.url
-                                    }) {
-                                        Color.clear
-                                            .frame(width: length, height: length)
-                                    }
+                                }
+                                .frame(width: length, height: length)
+                                .contentShape(Rectangle().size(CGSize(width: length - 1, height: length - 1))) // 限制点击区域
+                                .onTapGesture {
+                                    selectedPost = post
+                                    selectedImage = imageMeta.url
                                 }
                             }
                         }
