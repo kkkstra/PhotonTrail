@@ -17,7 +17,7 @@ struct FullScreenImageDetailedView: View {
     @State private var lastScale: CGFloat = 1.0
     @State private var lastOffset: CGSize = .zero
     @State private var currentIndex: Int = 0
-    @State private var showNavigationButtons: Bool = true
+    @State private var showNavigationButtons: Bool = false
     
     var body: some View {
         ZStack {
@@ -127,7 +127,7 @@ struct FullScreenImageDetailedView: View {
             }
             
             // Navigation buttons to switch images
-            if showNavigationButtons {
+            if showNavigationButtons && (post?.images.count ?? 0) > 1 {
                 HStack {
                     Button(action: {
                         currentIndex -= 1
@@ -174,6 +174,7 @@ struct FullScreenImageDetailedView: View {
                 }
         )
         .onAppear {
+            showNavigationButtons = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                 withAnimation(.easeInOut(duration: 0.5)) {
                     showNavigationButtons = false
