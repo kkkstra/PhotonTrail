@@ -83,12 +83,12 @@ struct FullScreenImageDetailedView: View {
                 
                 VStack(alignment: .leading) {
                     Text(post?.title ?? "")
-                        .font(.headline)
+                        .font(.system(size: 18))
                         .foregroundColor(.white)
                         .padding(.bottom, 2)
                     
                     Text(post?.content ?? "")
-                        .font(.body)
+                        .font(.system(size: 16))
                         .foregroundColor(.white)
                         .lineLimit(3)
                         .padding(.bottom, 8)
@@ -101,15 +101,19 @@ struct FullScreenImageDetailedView: View {
                         HStack {
                             Image(systemName: "camera")
                                 .foregroundColor(.white)
+                                .font(.system(size: 14))
                             Text(post?.camera ?? "N/A")
                                 .foregroundColor(.white)
+                                .font(.caption2)
                         }
                         
                         HStack {
                             Image(systemName: "circle.dotted.circle")
                                 .foregroundColor(.white)
+                                .font(.system(size: 15))
                             Text(post?.lens ?? "N/A")
                                 .foregroundColor(.white)
+                                .font(.caption2)
                         }
                     }
                 }
