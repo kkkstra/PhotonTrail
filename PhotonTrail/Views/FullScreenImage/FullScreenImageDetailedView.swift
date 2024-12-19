@@ -128,34 +128,52 @@ struct FullScreenImageDetailedView: View {
             }
             
             // Navigation buttons to switch images
+            
             if showNavigationButtons && (post?.images.count ?? 0) > 1 {
-                HStack {
-                    Button(action: {
-                        currentIndex -= 1
-                        print("currentIndex: \(currentIndex)")
-                    }) {
-                        Image(systemName: "chevron.left.circle.fill")
-                            .font(.largeTitle)
-                            .foregroundColor(currentIndex == 0 ? .gray : .white)
+                VStack(alignment: .leading) {
+                    VStack {
+                        Text("\(currentIndex + 1) / \(post?.images.count ?? 1)")
+                            .foregroundColor(.white)
+                            .padding(10)
+                            .background(BlurView(style: .systemUltraThinMaterialDark))
+                            .cornerRadius(10)
                     }
-                    .disabled(currentIndex == 0)
-                    .padding()
+                    .padding(.top, 15)
+                    .padding(.leading, 20)
                     
                     Spacer()
-                    
-                    Button(action: {
-                        currentIndex += 1
-                        print("currentIndex: \(currentIndex)/\((post?.images.count ?? 1) - 1)")
-                    }) {
-                        Image(systemName: "chevron.right.circle.fill")
-                            .font(.largeTitle)
-                            .foregroundColor(currentIndex == (post?.images.count ?? 1) - 1 ? .gray : .white)
+                
+                    HStack {
+                        Button(action: {
+                            currentIndex -= 1
+                            print("currentIndex: \(currentIndex)")
+                        }) {
+                            Image(systemName: "chevron.left.circle.fill")
+                                .font(.largeTitle)
+                                .foregroundColor(currentIndex == 0 ? .gray : .white)
+                        }
+                        .disabled(currentIndex == 0)
+                        .padding()
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            currentIndex += 1
+                            print("currentIndex: \(currentIndex)/\((post?.images.count ?? 1) - 1)")
+                        }) {
+                            Image(systemName: "chevron.right.circle.fill")
+                                .font(.largeTitle)
+                                .foregroundColor(currentIndex == (post?.images.count ?? 1) - 1 ? .gray : .white)
+                        }
+                        .disabled(currentIndex == (post?.images.count ?? 1) - 1)
+                        .padding()
                     }
-                    .disabled(currentIndex == (post?.images.count ?? 1) - 1)
-                    .padding()
+                    .padding(.bottom, 20)
+                    .transition(.opacity)
+                    .animation(.easeInOut(duration: 0.5), value: showNavigationButtons)
+                    
+                    Spacer()
                 }
-                .transition(.opacity)
-                .animation(.easeInOut(duration: 0.5), value: showNavigationButtons)
             }
         }
         .gesture(
@@ -188,7 +206,7 @@ struct FullScreenImageDetailedView: View {
             withAnimation(.easeInOut(duration: 0.5)) {
                 showNavigationButtons = true
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                 withAnimation(.easeInOut(duration: 0.5)) {
                     showNavigationButtons = false
                 }
