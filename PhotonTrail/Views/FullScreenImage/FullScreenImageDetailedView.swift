@@ -10,6 +10,7 @@ import NukeUI
 
 struct FullScreenImageDetailedView: View {
     @Binding var post: Post?
+    @Binding var initialIndex: Int
     @Environment(\.presentationMode) var presentationMode
     
     @State private var scale: CGFloat = 1.0
@@ -174,6 +175,8 @@ struct FullScreenImageDetailedView: View {
                 }
         )
         .onAppear {
+            currentIndex = initialIndex
+            print("current: \(currentIndex), initial: \(initialIndex)")
             showNavigationButtons = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                 withAnimation(.easeInOut(duration: 0.5)) {

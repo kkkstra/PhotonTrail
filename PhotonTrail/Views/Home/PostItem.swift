@@ -12,6 +12,7 @@ struct PostItem: View {
     var post: Post
     @State private var showFullImageScreen = false
     @State private var selectedImageURL: String = ""
+    @State private var selectedImageIndex: Int = 0
     @State private var selectedPost: Post?
     @State private var navigateToUserView = false
 
@@ -89,6 +90,7 @@ struct PostItem: View {
                     .onTapGesture {
                         selectedImageURL = image.url
                         selectedPost = post
+                        selectedImageIndex = image.index
                         showFullImageScreen.toggle()
                     }
             }
@@ -96,7 +98,7 @@ struct PostItem: View {
         .frame(maxWidth: .infinity)
         .aspectRatio(max(CGFloat(post.images[0].width) / CGFloat(post.images[0].height + 1), 0.75), contentMode: .fill)
         .fullScreenCover(isPresented: $showFullImageScreen) {
-            FullScreenImageDetailedView(post: $selectedPost)
+            FullScreenImageDetailedView(post: $selectedPost, initialIndex: $selectedImageIndex)
         }
         
         VStack(alignment: .leading){

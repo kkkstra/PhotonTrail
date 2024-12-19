@@ -12,6 +12,7 @@ struct UserPhotosView: View {
     @ObservedObject var userPostsViewModel: UserPostsViewModel
     @State private var selectedPost: Post?
     @State private var selectedImage: String = ""
+    @State private var selectedImageIndex: Int = 0
     
     var body: some View {
         VStack {
@@ -50,6 +51,7 @@ struct UserPhotosView: View {
                                 .onTapGesture {
                                     selectedPost = post
                                     selectedImage = imageMeta.url
+                                    selectedImageIndex = imageMeta.index
                                 }
                             }
                         }
@@ -59,7 +61,7 @@ struct UserPhotosView: View {
             .frame(height: calculateGridHeight())
         }
         .fullScreenCover(item: $selectedPost) { post in
-            FullScreenImageDetailedView(post: $selectedPost)
+            FullScreenImageDetailedView(post: $selectedPost, initialIndex: $selectedImageIndex)
         }
     }
     
