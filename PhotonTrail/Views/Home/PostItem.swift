@@ -22,20 +22,33 @@ struct PostItem: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            HStack{
+            HStack {
                 NavigationLink(destination: UserView(userViewModel: userViewModel), isActive: $navigateToUserView) {
-                    LazyImage(url: URL(string: post.avatar)) { state in
-                        if let image = state.image {
-                            image.resizable()
-                                .scaledToFill()
-                        } else {
-                            Image("defaultAvatar")
-                                .resizable()
-                                .scaledToFill()
+                    HStack {
+                        LazyImage(url: URL(string: post.avatar)) { state in
+                            if let image = state.image {
+                                image.resizable()
+                                    .scaledToFill()
+                            } else {
+                                Image("defaultAvatar")
+                                    .resizable()
+                                    .scaledToFill()
+                            }
+                        }
+                        .frame(width: 42, height: 42)
+                        .clipShape(Circle())
+                        
+                        VStack(alignment: .leading) {
+                            Text(post.name)
+                                .font(.headline)
+                                .foregroundColor(.primaryText)
+                                .fontWeight(.medium)
+                            
+                            Text(post.getPublishedTime())
+                                .font(.subheadline)
+                                .foregroundColor(.secondaryText)
                         }
                     }
-                    .frame(width: 48, height: 48)
-                    .clipShape(Circle())
                     .onTapGesture {
                         if enableUserTap {
                             userViewModel.fetchData(userID: post.user_id) {
@@ -44,15 +57,8 @@ struct PostItem: View {
                         }
                     }
                 }
-                
-                Text(post.name)
-                    .font(.headline)
-                    .fontWeight(.medium)
 
                 Spacer()
-                
-                Text(post.getPublishedTime())
-                    .font(.subheadline)
                 
                 if enableEdit {
                     Menu {
@@ -64,7 +70,7 @@ struct PostItem: View {
                             Label("删除", systemImage: "trash")
                         }
                     } label: {
-                        Image(systemName: "ellipsis.circle")
+                        Image(systemName: "ellipsis")
                             .font(.system(size: 20))
                             .foregroundColor(.button3)
                     }
@@ -97,18 +103,18 @@ struct PostItem: View {
             if(!post.title.isEmpty){
                 Text(post.title)
                     .font(.title3)
-                    .padding(.bottom, 4)
+                    .padding(.bottom, 1)
             }
             if(!post.content.isEmpty){
                 Text(post.content)
                     .font(.body)
-                    .padding(.bottom, 4)
+//                    .padding(.bottom, 4)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.top, 6)
+        .padding(.top, 4)
         .padding(.leading)
         .padding(.trailing)
-        .padding(.bottom)
+//        .padding(.bottom)
     }
 }
