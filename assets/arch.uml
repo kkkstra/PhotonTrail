@@ -1,0 +1,113 @@
+@startuml
+skinparam packageStyle rectangle
+
+package "View" {
+    class ContentView {
+        +display()
+    }
+    class LoginView {
+        +login()
+        +register()
+    }
+    class HomeView {
+        +displayPosts()
+    }
+    class PostItem {
+        +displayPost()
+    }
+    class AddPostView {
+        +submitPost()
+    }
+    class ProfileView {
+        +displayProfile()
+    }
+    class UserView {
+        +displayUser()
+    }
+    class UserPhotosView {
+        +displayPhotos()
+    }
+    class UserPostsView {
+        +displayPosts()
+    }
+    class FullScreenImageView {
+        +displayImage()
+    }
+    class FullScreenImageDetailedView {
+        +displayImageDetails()
+    }
+}
+
+package "ViewModel" {
+    class ModelData {
+        -userData
+        -isLoggedIn
+    }
+    class LoginViewModel {
+        +login()
+        +register()
+    }
+    class PostViewModel {
+        +fetchPosts()
+    }
+    class AddPostViewModel {
+        +addPost()
+    }
+    class ProfileViewModel {
+        +updateProfile()
+    }
+    class UserPostsViewModel {
+        +fetchUserPosts()
+    }
+    class UserViewModel {
+        +fetchUser()
+    }
+}
+
+package "Model" {
+    class User {
+        -id
+        -name
+        -email
+    }
+    class Post {
+        -id
+        -title
+        -content
+        -images
+        -user_id
+    }
+    class Result {
+        -code
+        -msg
+        -data
+    }
+    class ImageMeta {
+        -url
+        -width
+        -height
+        -index
+    }
+}
+
+ContentView --> ModelData
+LoginView --> LoginViewModel
+HomeView --> PostViewModel
+PostItem --> PostViewModel
+AddPostView --> AddPostViewModel
+ProfileView --> ProfileViewModel
+UserView --> UserViewModel
+UserPhotosView --> UserViewModel
+UserPostsView --> UserPostsViewModel
+FullScreenImageView --> UserViewModel
+FullScreenImageDetailedView --> UserViewModel
+
+ModelData --> User
+LoginViewModel --> User
+PostViewModel --> Post
+AddPostViewModel --> Post
+ProfileViewModel --> User
+UserPostsViewModel --> Post
+UserViewModel --> User
+UserViewModel --> ImageMeta
+@enduml
